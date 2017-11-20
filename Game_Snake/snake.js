@@ -5,17 +5,15 @@
 function Snake() {
 
     this.init = function(){
-        this.x = 0;
-        this.y = 0;
-        this.xspeed = 1;
-        this.yspeed = 0;
+        this.pos = createVector(0, 0);
+        this.speed = createVector(1, 0);
         this.total = 1;
         this.tail = [];
     }
 
     // To eat the food
     this.eat = function(pos) {
-        var d = dist(this.x, this.y, pos.x, pos.y);
+        var d = dist(this.pos.x, this.pos.y, pos.x, pos.y);
         if (d < 1) {
             this.total++;
             return true;
@@ -26,9 +24,9 @@ function Snake() {
 
     // To direct the snake
     this.dir = function(x, y) {
-        if (this.xspeed != Math.abs(x) && this.yspeed != Math.abs(y)){
-            this.xspeed = x;
-            this.yspeed = y;
+        if (this.speed.x != Math.abs(x) && this.speed.y != Math.abs(y)) {
+            this.speed.x = x;
+            this.speed.y = y;
         }
     }
 
@@ -36,7 +34,7 @@ function Snake() {
     this.death = function() {
         for (var i = 0; i < this.tail.length; i++) {
             var pos = this.tail[i];
-            var d = dist(this.x, this.y, pos.x, pos.y);
+            var d = dist(this.pos.x, this.pos.y, pos.x, pos.y);
             if (d < 1) {
                 console.log('starting over');
                 return true;
@@ -51,22 +49,23 @@ function Snake() {
             this.tail[i] = this.tail[i + 1];
         }
         if (this.total >= 1) {
-            this.tail[this.total - 1] = createVector(this.x, this.y);
+            this.tail[this.total - 1] = createVector(this.pos.x, this.pos.y);
         }
 
-        this.x = this.x + this.xspeed * scl;
-        this.y = this.y + this.yspeed * scl;
+        this.pos.x = this.pos.x + this.speed.x * scl;
+        this.pos.y = this.pos.y + this.speed.y * scl;
 
-        this.x = constrain(this.x, 0, width - scl);
-        this.y = constrain(this.y, 0, height - scl);
+        this.pos.x = constrain(this.pos.x, 0, width - scl);
+        this.pos.y = constrain(this.pos.y, 0, height - scl);
     }
 
+    // To show the snake
     this.show = function() {
         fill(255);
         for (var i = 0; i < this.tail.length; i++) {
             rect(this.tail[i].x, this.tail[i].y, scl, scl);
         }
-        rect(this.x, this.y, scl, scl);
+        rect(this.pos.x, this.pos.y, scl, scl);
 
     }
 
